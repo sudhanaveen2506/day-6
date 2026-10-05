@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f5ef">
+    <title>Good Thyme | Find your next favorite</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT,WONK@9..144,500,20,1;9..144,600,20,1;9..144,700,20,1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            color-scheme: light;
+            --paper: #f7f5ef;
+            --ink: #252921;
+            --muted: #74776f;
+            --line: #e5e3da;
+            --tomato: #d4543c;
+            --tomato-dark: #b8422d;
+            --sage: #526b4d;
+            --white: #fffefa;
+            --serif: "Fraunces", Georgia, serif;
+            --sans: "DM Sans", "Segoe UI", sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-width: 320px;
+            background-color: var(--paper);
+            background-image: radial-gradient(#d9d6ca 0.65px, transparent 0.65px);
+            background-size: 18px 18px;
+            color: var(--ink);
+            font-family: var(--sans);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        button, input, select { font: inherit; }
+        button, select { cursor: pointer; }
+        button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
+            outline: 3px solid #d98770;
+            outline-offset: 3px;
+        }
+
+        .topbar {
+            height: 74px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0 34px;
+            border-bottom: 1px solid rgba(37, 41, 33, .1);
+        }
+        .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; }
+        .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--tomato); color: white; font-size: 19px; }
+        .brand-name { font-family: var(--serif); font-size: 23px; font-weight: 600; letter-spacing: 0; }
+        .top-note { color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: 0; }
+
+        main { max-width: 1320px; margin: 0 auto; padding: 0 34px 72px; }
+        .intro {
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 255px;
+            align-items: end;
+            gap: 30px;
+            padding: 64px 0 42px;
+            border-bottom: 1px solid var(--line);
+        }
+        .eyebrow { margin: 0 0 13px; color: var(--sage); font-size: 11px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; }
+        h1 { max-width: 760px; margin: 0; font-family: var(--serif); font-size: clamp(44px, 6vw, 76px); font-weight: 500; letter-spacing: 0; line-height: .99; }
+        h1 em { color: var(--tomato); font-weight: 500; }
+        .intro-copy { max-width: 235px; margin: 0 0 5px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+        .search-panel { padding: 24px 0 20px; border-bottom: 1px solid var(--line); }
+        .search-row { display: grid; grid-template-columns: minmax(240px, 1fr) auto; align-items: center; gap: 18px; }
+        .search-wrap { position: relative; }
+        .search-icon { position: absolute; top: 50%; left: 17px; width: 19px; height: 19px; transform: translateY(-50%); color: #797c72; pointer-events: none; }
+        #searchInput { width: 100%; height: 54px; padding: 0 18px 0 49px; border: 1px solid #deddd4; border-radius: 4px; background: var(--white); color: var(--ink); font-size: 14px; }
+        #searchInput::placeholder { color: #92938b; }
+        .search-hint { color: var(--muted); font-size: 12px; }
+        .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 16px; }
+        .filter-label { margin-right: 2px; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; }
+        .select-wrap { position: relative; }
+        .select-wrap::after { position: absolute; top: 13px; right: 13px; width: 7px; height: 7px; border-right: 1.5px solid #696d63; border-bottom: 1.5px solid #696d63; content: ""; transform: rotate(45deg); pointer-events: none; }
+        select { min-width: 150px; height: 38px; appearance: none; padding: 0 34px 0 12px; border: 1px solid #deddd4; border-radius: 3px; background: rgba(255, 254, 250, .75); color: var(--ink); font-size: 12px; }
+        #sortSelect { min-width: 164px; }
+        .clear-button { height: 36px; margin-left: auto; padding: 0 9px; border: 0; background: transparent; color: var(--tomato-dark); font-size: 12px; font-weight: 700; }
+        .clear-button:hover { text-decoration: underline; }
+
+        .results-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 28px 0 17px; }
+        .results-head h2 { margin: 0; font-family: var(--serif); font-size: 27px; font-weight: 600; letter-spacing: 0; }
+        #resultCount { color: var(--muted); font-size: 12px; }
+        .meal-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 30px 20px; }
+        .meal-card { min-width: 0; animation: enter .38s both; }
+        @keyframes enter { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
+        .meal-image-button { position: relative; display: block; width: 100%; padding: 0; overflow: hidden; aspect-ratio: 1 / .82; border: 0; background: #e7e2d7; text-align: left; }
+        .meal-image { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .45s ease; }
+        .meal-image-button:hover .meal-image { transform: scale(1.045); }
+        .meal-tag { position: absolute; top: 12px; left: 12px; max-width: calc(100% - 24px); overflow: hidden; padding: 6px 9px; background: var(--white); color: var(--ink); font-size: 10px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+        .meal-info { padding: 12px 1px 0; }
+        .meal-meta { display: flex; flex-wrap: wrap; gap: 6px 10px; color: var(--sage); font-size: 10px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; }
+        .meal-title { display: -webkit-box; margin: 6px 0 0; overflow: hidden; font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: 0; line-height: 1.2; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+        .meal-open { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 0; border: 0; background: none; color: var(--tomato-dark); font-size: 11px; font-weight: 700; }
+        .meal-open svg { width: 13px; height: 13px; transition: transform .2s; }
+        .meal-open:hover svg { transform: translateX(3px); }
+        .state { grid-column: 1 / -1; min-height: 240px; display: grid; align-content: center; justify-items: center; padding: 40px 20px; text-align: center; }
+        .state-icon { display: grid; place-items: center; width: 48px; height: 48px; margin-bottom: 13px; border-radius: 50%; background: #e8eadf; color: var(--sage); font-size: 22px; }
+        .state h3 { margin: 0; font-family: var(--serif); font-size: 24px; font-weight: 600; }
+        .state p { max-width: 360px; margin: 8px 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+        .loader { width: 25px; height: 25px; border: 2px solid #deddd4; border-top-color: var(--tomato); border-radius: 50%; animation: spin .8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        dialog { width: min(760px, calc(100% - 28px)); max-height: min(88vh, 900px); padding: 0; overflow: auto; border: 0; background: var(--white); color: var(--ink); box-shadow: 0 22px 80px rgba(30, 32, 26, .28); }
+        dialog::backdrop { background: rgba(24, 28, 22, .64); }
+        .dialog-close { position: absolute; z-index: 1; top: 14px; right: 14px; display: grid; place-items: center; width: 38px; height: 38px; border: 0; border-radius: 50%; background: var(--white); color: var(--ink); font-size: 21px; }
+        .detail-media { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; background: var(--ink); }
+        .detail-image, .detail-video { display: block; width: 100%; aspect-ratio: 16 / 10; border: 0; object-fit: cover; }
+        .detail-content { padding: 28px clamp(20px, 5vw, 42px) 38px; }
+        .detail-content h2 { margin: 5px 0 8px; font-family: var(--serif); font-size: clamp(30px, 5vw, 43px); font-weight: 600; line-height: 1.08; }
+        .detail-meta { color: var(--sage); font-size: 11px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; }
+        .detail-columns { display: grid; grid-template-columns: minmax(150px, .8fr) 1.2fr; gap: 34px; margin-top: 25px; }
+        .detail-columns h3 { margin: 0 0 12px; font-family: var(--serif); font-size: 21px; font-weight: 600; }
+        .ingredients { margin: 0; padding: 0; list-style: none; }
+        .ingredients li { padding: 8px 0; border-bottom: 1px solid var(--line); color: #50534a; font-size: 12px; line-height: 1.5; }
+        .instructions { margin: 0; color: #50534a; font-size: 13px; line-height: 1.8; white-space: pre-line; }
+        footer { display: flex; justify-content: space-between; gap: 12px; max-width: 1320px; margin: 0 auto; padding: 18px 34px 26px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
+        footer a { color: var(--sage); text-decoration: none; }
+
+        @media (max-width: 900px) {
+            .meal-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px 16px; }
+            .intro { grid-template-columns: minmax(0, 1fr) 200px; }
+        }
+        @media (max-width: 640px) {
+            .topbar { height: 62px; padding: 0 19px; }
+            .top-note { font-size: 10px; }
+            main { padding: 0 19px 48px; }
+            .intro { display: block; padding: 46px 0 27px; }
+            h1 { font-size: clamp(45px, 13vw, 66px); }
+            .intro-copy { max-width: 340px; margin-top: 17px; font-size: 13px; }
+            .search-panel { padding-top: 17px; }
+            .search-row { grid-template-columns: 1fr; gap: 8px; }
+            #searchInput { height: 50px; }
+            .search-hint { padding-left: 2px; }
+            .filter-row { gap: 8px; }
+            .filter-label { flex-basis: 100%; }
+            .select-wrap { flex: 1 1 calc(50% - 8px); }
+            select, #sortSelect { width: 100%; min-width: 0; }
+            .clear-button { margin-left: 0; }
+            .meal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 23px 12px; }
+            .meal-title { font-size: 17px; }
+            .meal-tag { top: 8px; left: 8px; padding: 5px 7px; font-size: 9px; }
+            .results-head { padding-top: 23px; }
+            .results-head h2 { font-size: 24px; }
+            .detail-media { grid-template-columns: 1fr; }
+            .detail-columns { grid-template-columns: 1fr; gap: 24px; }
+            footer { padding: 16px 19px 22px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="#top" aria-label="Good Thyme home">
+            <span class="brand-mark" aria-hidden="true">✳</span>
+            <span class="brand-name">good thyme</span>
+        </a>
+        <span class="top-note">A little inspiration for what's cooking</span>
+    </header>
+
+    <main id="top">
+        <section class="intro" aria-labelledby="pageTitle">
+            <div>
+                <p class="eyebrow">The everyday recipe collection</p>
+                <h1 id="pageTitle">Find your next<br><em>favorite.</em></h1>
+            </div>
+            <p class="intro-copy">Good food doesn't need a special occasion. Find something lovely to make with what's on your mind.</p>
+        </section>
+
+        <section class="search-panel" aria-label="Search and filter recipes">
+            <div class="search-row">
+                <label class="search-wrap">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.7"/><path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                    <input id="searchInput" type="search" placeholder="Search by dish, ingredient, or craving..." autocomplete="off" aria-label="Search recipes">
+                </label>
+                <span class="search-hint">Try “chicken”, “pasta”, or “curry”</span>
+            </div>
+            <div class="filter-row">
+                <span class="filter-label">Narrow it down</span>
+                <label class="select-wrap"><select id="categoryFilter" aria-label="Filter by category"><option value="">All categories</option></select></label>
+                <label class="select-wrap"><select id="areaFilter" aria-label="Filter by cuisine"><option value="">All cuisines</option></select></label>
+                <label class="select-wrap"><select id="sortSelect" aria-label="Sort recipes"><option value="featured">Sort: Featured</option><option value="az">Name: A to Z</option><option value="za">Name: Z to A</option></select></label>
+                <button class="clear-button" id="clearFilters" type="button">Clear filters</button>
+            </div>
+        </section>
+
+        <section aria-labelledby="resultsTitle">
+            <div class="results-head">
+                <h2 id="resultsTitle">A few good things</h2>
+                <span id="resultCount" aria-live="polite"></span>
+            </div>
+            <div class="meal-grid" id="mealGrid" aria-live="polite" aria-busy="true">
+                <div class="state"><span class="loader" aria-hidden="true"></span><p>Finding something delicious...</p></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <span>Made for the love of a good meal.</span>
+        <a href="https://www.themealdb.com/" target="_blank" rel="noreferrer">Recipes via TheMealDB</a>
+    </footer>
+
+    <dialog id="recipeDialog" aria-labelledby="detailTitle">
+        <button class="dialog-close" id="closeDialog" type="button" aria-label="Close recipe">×</button>
+        <div id="dialogContent"></div>
+    </dialog>
+
+    <script>
+        const API_URL = "https://www.themealdb.com/api/json/v1/1/search.php?s=";
+        const searchInput = document.getElementById("searchInput");
+        const categoryFilter = document.getElementById("categoryFilter");
+        const areaFilter = document.getElementById("areaFilter");
+        const sortSelect = document.getElementById("sortSelect");
+        const mealGrid = document.getElementById("mealGrid");
+        const resultCount = document.getElementById("resultCount");
+        const recipeDialog = document.getElementById("recipeDialog");
+        const dialogContent = document.getElementById("dialogContent");
+        let meals = [];
+        let searchTimer;
+        let searchVersion = 0;
+
+        function escapeHTML(value) {
+            return String(value ?? "").replace(/[&<>"']/g, character => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
+            })[character]);
+        }
+
+        function showState(title, message, icon = "") {
+            mealGrid.innerHTML = `<div class="state"><span class="state-icon" aria-hidden="true">${icon}</span><h3>${escapeHTML(title)}</h3><p>${escapeHTML(message)}</p></div>`;
+            mealGrid.setAttribute("aria-busy", "false");
+            resultCount.textContent = "";
+        }
+
+        async function searchMeals(query = "") {
+            const version = ++searchVersion;
+            mealGrid.setAttribute("aria-busy", "true");
+            mealGrid.innerHTML = '<div class="state"><span class="loader" aria-hidden="true"></span><p>Finding something delicious...</p></div>';
+            resultCount.textContent = "";
+
+            try {
+                const response = await fetch(`${API_URL}${encodeURIComponent(query.trim())}`);
+                if (!response.ok) throw new Error("Recipe service is unavailable.");
+                const data = await response.json();
+                if (version !== searchVersion) return;
+                meals = data.meals || [];
+                updateFilterOptions();
+                renderMeals();
+            } catch (error) {
+                if (version !== searchVersion) return;
+                showState("We couldn't reach the kitchen", "Check your connection and try searching again.", "!");
+            }
+        }
+
+        function updateFilterOptions() {
+            const previousCategory = categoryFilter.value;
+            const previousArea = areaFilter.value;
+            const categories = [...new Set(meals.map(meal => meal.strCategory).filter(Boolean))].sort();
+            const areas = [...new Set(meals.map(meal => meal.strArea).filter(Boolean))].sort();
+
+            categoryFilter.innerHTML = '<option value="">All categories</option>' + categories.map(category => `<option value="${escapeHTML(category)}">${escapeHTML(category)}</option>`).join("");
+            areaFilter.innerHTML = '<option value="">All cuisines</option>' + areas.map(area => `<option value="${escapeHTML(area)}">${escapeHTML(area)}</option>`).join("");
+            if (categories.includes(previousCategory)) categoryFilter.value = previousCategory;
+            if (areas.includes(previousArea)) areaFilter.value = previousArea;
+        }
+
+        function renderMeals() {
+            let visibleMeals = meals.filter(meal =>
+                (!categoryFilter.value || meal.strCategory === categoryFilter.value) &&
+                (!areaFilter.value || meal.strArea === areaFilter.value)
+            );
+
+            if (sortSelect.value === "az") visibleMeals = [...visibleMeals].sort((a, b) => a.strMeal.localeCompare(b.strMeal));
+            if (sortSelect.value === "za") visibleMeals = [...visibleMeals].sort((a, b) => b.strMeal.localeCompare(a.strMeal));
+
+            mealGrid.setAttribute("aria-busy", "false");
+            resultCount.textContent = `${visibleMeals.length} ${visibleMeals.length === 1 ? "recipe" : "recipes"}`;
+            if (!visibleMeals.length) {
+                showState("Nothing on the menu just yet", "Try a different search or clear a filter to see more recipes.", "⌕");
+                resultCount.textContent = "0 recipes";
+                return;
+            }
+
+            mealGrid.innerHTML = visibleMeals.map((meal, index) => `
+                <article class="meal-card" style="animation-delay:${Math.min(index * 35, 280)}ms">
+                    <button class="meal-image-button" type="button" data-meal-id="${escapeHTML(meal.idMeal)}" aria-label="View ${escapeHTML(meal.strMeal)} recipe">
+                        <img class="meal-image" src="${escapeHTML(meal.strMealThumb)}" alt="${escapeHTML(meal.strMeal)}" loading="lazy">
+                        <span class="meal-tag">${escapeHTML(meal.strCategory || "Recipe")}</span>
+                    </button>
+                    <div class="meal-info">
+                        <div class="meal-meta"><span>${escapeHTML(meal.strArea || "From everywhere")}</span></div>
+                        <h3 class="meal-title">${escapeHTML(meal.strMeal)}</h3>
+                        <button class="meal-open" type="button" data-meal-id="${escapeHTML(meal.idMeal)}">Get the recipe <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                    </div>
+                </article>
+            `).join("");
+        }
+
+        function getYouTubeEmbedUrl(videoUrl) {
+            try {
+                const parsedUrl = new URL(videoUrl);
+                if (!["youtube.com", "www.youtube.com", "m.youtube.com", "youtu.be"].includes(parsedUrl.hostname)) return "";
+                const videoId = parsedUrl.hostname === "youtu.be"
+                    ? parsedUrl.pathname.slice(1).split("/")[0]
+                    : parsedUrl.searchParams.get("v");
+                return videoId && /^[\w-]{11}$/.test(videoId)
+                    ? `https://www.youtube-nocookie.com/embed/${videoId}?rel=0`
+                    : "";
+            } catch {
+                return "";
+            }
+        }
+
+        function openRecipe(meal) {
+            const ingredients = [];
+            for (let index = 1; index <= 20; index++) {
+                const ingredient = meal[`strIngredient${index}`]?.trim();
+                const measure = meal[`strMeasure${index}`]?.trim();
+                if (ingredient) ingredients.push(`<li>${escapeHTML([measure, ingredient].filter(Boolean).join(" "))}</li>`);
+            }
+            const videoEmbedUrl = getYouTubeEmbedUrl(meal.strYoutube || "");
+
+            dialogContent.innerHTML = `
+                <div class="detail-media">
+                    <img class="detail-image" src="${escapeHTML(meal.strMealThumb)}" alt="${escapeHTML(meal.strMeal)}">
+                    ${videoEmbedUrl ? `<iframe class="detail-video" src="${escapeHTML(videoEmbedUrl)}" title="Cooking video for ${escapeHTML(meal.strMeal)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>` : ""}
+                </div>
+                <div class="detail-content">
+                    <div class="detail-meta">${escapeHTML(meal.strArea || "Recipe")} · ${escapeHTML(meal.strCategory || "Made with love")}</div>
+                    <h2 id="detailTitle">${escapeHTML(meal.strMeal)}</h2>
+                    <div class="detail-columns">
+                        <section><h3>Ingredients</h3><ul class="ingredients">${ingredients.join("")}</ul></section>
+                        <section><h3>Let's make it</h3><p class="instructions">${escapeHTML(meal.strInstructions || "No instructions are available for this recipe.")}</p></section>
+                    </div>
+                </div>
+            `;
+            recipeDialog.showModal();
+        }
+
+        searchInput.addEventListener("input", () => {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => searchMeals(searchInput.value), 350);
+        });
+        categoryFilter.addEventListener("change", renderMeals);
+        areaFilter.addEventListener("change", renderMeals);
+        sortSelect.addEventListener("change", renderMeals);
+        document.getElementById("clearFilters").addEventListener("click", () => {
+            searchInput.value = "";
+            categoryFilter.value = "";
+            areaFilter.value = "";
+            sortSelect.value = "featured";
+            clearTimeout(searchTimer);
+            searchMeals();
+        });
+        mealGrid.addEventListener("click", event => {
+            const button = event.target.closest("[data-meal-id]");
+            if (button) {
+                const meal = meals.find(item => item.idMeal === button.dataset.mealId);
+                if (meal) openRecipe(meal);
+            }
+        });
+        document.getElementById("closeDialog").addEventListener("click", () => recipeDialog.close());
+        recipeDialog.addEventListener("click", event => {
+            if (event.target === recipeDialog) recipeDialog.close();
+        });
+
+        searchMeals();
+    </script>
+</body>
+</html>

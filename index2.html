@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Js Objects</title>
+</head>
+<body>
+    <h1>Objects Demo</h1>
+    <h2>Student Details</h2>
+    <script>
+        const Students =[
+            {
+                name:"mahith",
+                age:21,
+                phone:12345
+            },
+            {
+                name:"nikhil",
+                age:22,
+                phone:12345
+            },
+            {
+                name:"naveen",
+                age:23,
+                phone:3123
+            },
+            {
+                name:"madhu",
+                age:24,
+                phone:89709
+            },
+            {
+                name:"kiran",
+                age:25,
+                phone:567576
+            }
+        ]
+
+        console.log(Students)
+        var i=0
+        for(let students of Students){
+        document.write( "<br> Name : ",Students[i].name)
+        document.write( "<br> Age: ",Students[i].age )
+        document.write( "<br> Phone :",Students[i].phone)
+        document.write("<br>")
+        i++
+        }
+    </script>
+</body>
+</html>
